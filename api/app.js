@@ -441,7 +441,8 @@ app.get('/lists/:listId/tasks/:taskId', (req, res) => {
 app.post('/lists/:listId/tasks', (req, res) => {
     let newTask = new Task({
         title: req.body.title,
-        _listId: req.params.listId
+        _listId: req.params.listId,
+        completed: false
     })
     newTask.save().then((newTaskDoc) => {
         res.send(newTaskDoc)
@@ -452,7 +453,7 @@ app.patch('/lists/:listId/tasks/:taskId', (req, res) => {
     Task.findByIdAndUpdate({ _id: req.params.taskId, _listId: req.params.listId }, {
         $set: req.body
     }).then(() => {
-        res.sendStatus(200)
+        res.send({ message: 'Updated' })
     })
 })
 

@@ -20,7 +20,7 @@
             <h1 class="title has-text-primary">
                 Tasks
             </h1>
-            <div class="task" *ngFor="let task of Tasks"><p>{{ task.title }}</p></div>
+            <div class="task" *ngFor="let task of Tasks" (click)="onTaskClick(task)" [ngClass]="{ 'completed': task.completed }"><p>{{ task.title }}</p></div>
             <div routerLink="./new-task" class="circle-add-button button is-primary">
                 <img src="../../../assets/plus-icon.svg" alt="">
             </div>

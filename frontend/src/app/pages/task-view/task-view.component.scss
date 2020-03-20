@@ -98,7 +98,7 @@
         }
     }
 
-    &.completed .task-text {
+    &.completed  {
         text-decoration: line-through;
         opacity: 0.8;
     }
