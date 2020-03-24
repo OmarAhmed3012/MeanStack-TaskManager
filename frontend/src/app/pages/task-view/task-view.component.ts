@@ -12,16 +12,20 @@ import { List } from 'src/app/models/list.model';
 export class TaskViewComponent implements OnInit {
 
   lists: List[]
-  Tasks: Task[]
+  tasks: Task[]
 
   constructor(private taskService: TaskService, private route: ActivatedRoute) { }
 
   ngOnInit(): void {
     this.route.params.subscribe(
       (params: Params) => {
+        if (params.listId) {
         this.taskService.getTasks(params.listId).subscribe((tasks: Task[]) => {
-          this.Tasks = tasks
-        })
+          this.tasks = tasks
+        }) }
+        else {
+          this.tasks = undefined;
+        }
       }
     )
     this.taskService.getLists().subscribe((lists: List[]) => {

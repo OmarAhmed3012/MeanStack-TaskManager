@@ -6,7 +6,7 @@ const { mongoose } = require('./db/mongoose');
 const bodyParser = require('body-parser');
 
 // Load in the mongoose models
-const { List, Task/*, User*/ } = require('./db/models');
+const { List, Task, User } = require('./db/models');
 
 //const jwt = require('jsonwebtoken');
 
@@ -30,25 +30,8 @@ app.use(function (req, res, next) {
 
     next();
 });
-/*
-/////////// i will comment this for now to test work 
-// check whether the request has a valid JWT access token
-let authenticate = (req, res, next) => {
-    let token = req.header('x-access-token');
 
-    // verify the JWT
-    jwt.verify(token, User.getJWTSecret(), (err, decoded) => {
-        if (err) {
-            // there was an error
-            // jwt is invalid - * DO NOT AUTHENTICATE *
-            res.status(401).send(err);
-        } else {
-            // jwt is valid
-            req.user_id = decoded._id;
-            next();
-         }
-});
-}
+
 
 // Verify Refresh Token Middleware (which will be verifying the session)
 let verifySession = (req, res, next) => {
@@ -102,6 +85,28 @@ let verifySession = (req, res, next) => {
 }
 
 //// END MIDDLEWARE  
+
+
+/*
+/////////// i will comment this for now to test work 
+// check whether the request has a valid JWT access token
+let authenticate = (req, res, next) => {
+    let token = req.header('x-access-token');
+
+    // verify the JWT
+    jwt.verify(token, User.getJWTSecret(), (err, decoded) => {
+        if (err) {
+            // there was an error
+            // jwt is invalid - * DO NOT AUTHENTICATE *
+            res.status(401).send(err);
+        } else {
+            // jwt is valid
+            req.user_id = decoded._id;
+            next();
+         }
+});
+}
+
 
 
 
@@ -295,11 +300,21 @@ app.delete('/lists/:listId/tasks/:taskId', authenticate, (req, res) => {
 
 
 
-/* USER ROUTES 
+/* HELPER METHODS 
+let deleteTasksFromList = (_listId) => {
+    Task.deleteMany({
+        _listId
+    }).then(() => {
+        console.log("Tasks from " + _listId + " were deleted!");
+    })
+}*/
 
-/**
- * POST /users
- * Purpose: Sign up
+
+// USER ROUTES 
+
+
+  //POST /users
+// Purpose: Sign up
  
 app.post('/users', (req, res) => {
     // User sign up
@@ -329,9 +344,9 @@ app.post('/users', (req, res) => {
 })
 
 
-/**
- * POST /users/login
- * Purpose: Login
+
+ // POST /users/login
+ //* Purpose: Login
  
 app.post('/users/login', (req, res) => {
     let email = req.body.email;
@@ -359,9 +374,9 @@ app.post('/users/login', (req, res) => {
 })
 
 
-/**
- * GET /users/me/access-token
- * Purpose: generates and returns an access token
+
+// * GET /users/me/access-token
+// * Purpose: generates and returns an access token
  
 app.get('/users/me/access-token', verifySession, (req, res) => {
     // we know that the user/caller is authenticated and we have the user_id and user object available to us
@@ -373,15 +388,6 @@ app.get('/users/me/access-token', verifySession, (req, res) => {
 })
 
 
-
-/* HELPER METHODS 
-let deleteTasksFromList = (_listId) => {
-    Task.deleteMany({
-        _listId
-    }).then(() => {
-        console.log("Tasks from " + _listId + " were deleted!");
-    })
-}*/
 
 app.get('/lists', (req, res) => {
 List.find({}).then((lists) => {
